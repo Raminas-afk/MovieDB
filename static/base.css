@@ -1,0 +1,17 @@
+img {
+    max-width: 400px;
+    max-height: 400px;
+}
+
+#description {
+    margin: 20px;
+}
+
+#poster {
+    margin-top: 60px;
+    padding-left: 0px;
+}
+
+#overview {
+    padding-top:50px;
+}

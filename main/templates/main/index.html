@@ -20,8 +20,20 @@
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <div class="container" id="overview">
-                <h3>{{movie.title}}</h3>
-                {{movie.overview}}
+                <h3>{{movie.title}}{{movie_id}}</h3>
+                {{movie.overview}}<br>
+                <form action="{% url 'add_seen' %}" method="POST">
+                    {% csrf_token %}
+                    <input type='hidden' name='id' value={{movie_id}}>
+                    <button value="submit" class="btn btn-outline-primary">Already watched it</button>
+                </form>
+                <form action="{% url 'add_seen' %}" method="POST">
+                    {% csrf_token %}
+                    <input type='hidden' name='watch_later' value={{movie_id}}>
+                    <button value="submit" class="btn btn-outline-primary">Watch Later</button>
+                </form> 
+                {% comment %} <a href="{% url 'add-to-seen' %}" name="movie_id" value=id class="btn btn-outline-success"></a> {% endcomment %}
+                <a href="" class="btn btn-outline-success">Watch later</a>
             </div>
         </div>
         <div class="col">

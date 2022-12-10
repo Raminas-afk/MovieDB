@@ -3,8 +3,21 @@ from .forms import NewUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
+from .models import SeenMovie
+
+User = get_user_model()
+
 
 # Create your views here.
+
+def profile_overview(request):
+    movies = SeenMovie.objects.filter(seen_by=request.user)
+
+    return render(request, "userprofiles/profile_overview.html", {
+        "movies": movies
+    })
+
 
 def register_request(request):
     if request.method == "POST":

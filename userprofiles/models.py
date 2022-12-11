@@ -14,7 +14,16 @@ class SeenMovie(models.Model):
     favorite = models.BooleanField(default=False)
     seen_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="seen_movies")
 
+    def save_model(self, request):
+        SeenMovie.seen_by = request.user
+        super().save_model(request)
+
+    def __str__(self):
+        return str(self.movie_id)
 
 class SavedMovie(models.Model):
     movie_id = models.IntegerField()
-    saved_by = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    saved_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="saved_movies")
+     
+    def __str__(self):
+        return str(self.movie_id)

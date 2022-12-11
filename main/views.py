@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
-from userprofiles.models import SeenMovie
+from userprofiles.models import SeenMovie, SavedMovie
 import requests
 
 User = get_user_model()
@@ -31,12 +31,17 @@ def index(request):
             "movie_id": id
         })
 
-def add_to_seen(request):
+def add_to_list(request):
     if request.method == "POST":
-            movie_id = request.POST['id']
+        if "seen_movie" in request.POST:
+            movie_id = request.POST['seen_movie']
             new_movie = SeenMovie(movie_id=movie_id)
-            # new_movie.save(commit=False)
             new_movie.save()
             new_movie.seen_by.add(request.user)
+        elif "saved_movie" in request.POST:
+            movie_id = request.POST['saved_movie']
+            new_movie = SavedMovie(movie_id=movie_id)
             new_movie.save()
-            return redirect('homepage')
+            new_movie.saved_by.add(request.user)
+        new_movie.save()
+        return redirect('homepage')

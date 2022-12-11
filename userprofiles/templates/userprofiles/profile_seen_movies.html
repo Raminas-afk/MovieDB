@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="poster-container text-center ">
+    <h1>Movies you have seen so far</h1>
+ {% for movie in movies %}
+    <form  action="{% url 'homepage' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="movie" value={{movie.title}}>
+        <input class="img-size" type="image" src={{movie.poster}} width="300" height="500">
+    </form>
+{% endfor %}
+
+
+</div>
+{% endblock %}

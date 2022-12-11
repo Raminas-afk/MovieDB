@@ -9,31 +9,31 @@
     <div class="row">
         
         <div class="col" id="poster">
+            {% if movie %}
             <img src={{movie.poster}}>
             <h2>Rating: {{movie.rating}}</h2>
+            {% endif %}
         </div>
         <div class="col-6" id="description">
 
             <form class="d-flex" role="search" action="" method="POST">
                 {% csrf_token %}
-                <input class="form-control me-2" type="search" placeholder="Enter movie name" aria-label="Search" name="movie">
+                <input class="form-control me-2" type="search" placeholder="Enter movie name" aria-label="Search" name="movie" required>
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <div class="container" id="overview">
-                <h3>{{movie.title}}{{movie_id}}</h3>
+                <h3>{{movie.title}}</h3>
                 {{movie.overview}}<br>
-                <form action="{% url 'add_seen' %}" method="POST">
+                <form action="{% url 'add-to-list' %}" method="POST">
                     {% csrf_token %}
-                    <input type='hidden' name='id' value={{movie_id}}>
-                    <button value="submit" class="btn btn-outline-primary">Already watched it</button>
+                    <input type='hidden' name="seen_movie" value={{movie_id}}>
+                    <button value="submit" class="btn btn-outline-primary">Already seen it</button>
+                </form><br>
+                <form action="{% url 'add-to-list' %}" method="POST">
+                    {% csrf_token %}
+                    <input type='hidden' name='saved_movie' value={{movie_id}}>
+                    <button value="submit" class="btn btn-outline-success">Watch Later</button>
                 </form>
-                <form action="{% url 'add_seen' %}" method="POST">
-                    {% csrf_token %}
-                    <input type='hidden' name='watch_later' value={{movie_id}}>
-                    <button value="submit" class="btn btn-outline-primary">Watch Later</button>
-                </form> 
-                {% comment %} <a href="{% url 'add-to-seen' %}" name="movie_id" value=id class="btn btn-outline-success"></a> {% endcomment %}
-                <a href="" class="btn btn-outline-success">Watch later</a>
             </div>
         </div>
         <div class="col">

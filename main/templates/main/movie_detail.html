@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %} Home Page {% endblock %}
+
+
+
+{% block content %}
+
+<div class="container text-center">
+    <div class="row">
+        
+        <div class="col" id="poster">
+            {% if movie %}
+            <img src={{movie.poster}}>
+            <h2>Rating: {{movie.rating}}</h2>
+            <button type="button" class="btn btn-dark">{{movie.genre_name_1}}</button>
+            <button type="button" class="btn btn-dark">{{movie.genre_name_2}}</button>
+            <button type="button" class="btn btn-dark">{{movie.genre_name_3}}</button>
+            {% endif %}
+        </div>
+        <div class="col-6" id="description">
+
+            {% comment %} <form class="d-flex" role="search" action="" method="POST"> Currently not working, needs to redirect?
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Enter movie name" aria-label="Search" name="movie" required>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form> {% endcomment %}
+            <div class="container" id="overview">
+                <h1>{{movie.title}}</h1>
+
+                <iframe width="600" height="400"
+                src="https://www.youtube.com/embed/{{movie.trailer_key}}">
+                </iframe> 
+
+                <h4>Description</h4>
+                {{movie.overview}}<br><br>
+
+                <form action="{% url 'add-or-remove' %}" method="POST">
+                    {% csrf_token %}
+                    <input type='hidden' name="seen_movie" value={{movie_id}}>
+                    <button value="submit" class="btn btn-outline-primary">{% if exists_in_seen %}Remove From Seen List{% else %}Already seen it{% endif %}</button>
+                </form><br>
+                <form action="{% url 'add-or-remove' %}" method="POST">
+                    {% csrf_token %}
+                    <input type='hidden' name='saved_movie' value={{movie_id}}>
+                    <button value="submit" class="btn btn-outline-success">{% if exists_in_later %}Remove From Watch Later List{% else %}Watch Later{% endif %}</button>
+                </form>
+            </div>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+</div>
+{% endblock %}

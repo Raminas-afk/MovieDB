@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %} Home Page {% endblock %}
+
+
+
+{% block content %}
+<br>
+<div class="container">
+<form class="d-flex" role="search" action="" method="POST">
+    {% csrf_token %}
+    <input class="form-control me-2" type="search" placeholder="Enter movie name" aria-label="Search" name="movie" required>
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+</div>
+
+{% for movie in search_results %}
+
+
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col" id="poster">
+            {% if movie %}
+            <form action="{% url 'movie-detail' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="movie_id" value={{movie.id}}>
+                <input class="img-size" type="image" src={{movie.poster}} width="300" height="500">
+            </form>
+            <h2>Rating: {{movie.rating}}</h2>
+            {% endif %}
+        </div>
+        <div class="col-6" id="description">
+            <div class="container" id="overview">
+                <h3>{{movie.title}}</h3>
+                {{movie.overview}}<br>
+                <form action="{% url 'movie-detail' %}" method="POST">
+                    {% csrf_token %}
+                    <input type='hidden' name="movie_id" value={{movie.id}}>
+                    <button value="submit" class="btn btn-outline-primary">Details</button>
+                </form><br>
+                
+            </div>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

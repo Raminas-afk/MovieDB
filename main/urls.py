@@ -3,7 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.index, name="homepage"),
-    path('add_movie/', views.add_to_list, name="add-to-list")
-    # re_path(r'^add_seen/(?P<movie_id>[0-9])/$', views.add_to_seen, name='add_seen')
+    path('', views.homepage, name="homepage"),
+    path('add_or_delete/', views.add_or_remove, name="add-or-remove"),
+    path('movie_detail/', views.movie_detail, name="movie-detail")
 ]

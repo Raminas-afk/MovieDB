@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from .forms import NewUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .models import SeenMovie
+from .forms import NewUserForm
+from utils.reusable_variables import key, poster_url
+
 import requests
 
-key = "79221ec88bc1ebd940da8a747c92a9c7"
 
 # Create your views here.
 
@@ -16,16 +16,15 @@ def profile_overview(request):
 def profile_saved_movies(request):
     user = request.user
     movies_id = user.saved_movies.all()
-    poster_url = "https://image.tmdb.org/t/p/original/"
     saved_movies_list = []
 
     for id in movies_id:
         url = "https://api.themoviedb.org/3/movie/{}?api_key={}"
         query = requests.get(url.format(id, key)).json()
         info = { 
+            "id": query['id'],
             "title": query['title'],
             "poster": poster_url + query['poster_path'],
-
         }
         saved_movies_list.append(info)
     return render(request, "userprofiles/profile_saved_movies.html", {
@@ -35,7 +34,6 @@ def profile_saved_movies(request):
 
 
 def profile_seen_movies(request):
-    # movies = SeenMovie.objects.filter(seen_by=request.user)
     user = request.user
     movies_id = user.seen_movies.all()
     poster_url = "https://image.tmdb.org/t/p/original/"

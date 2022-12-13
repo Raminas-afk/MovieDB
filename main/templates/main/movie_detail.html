@@ -7,23 +7,14 @@
 
 <div class="container text-center">
     <div class="row">
-        
         <div class="col" id="poster">
-            {% if movie %}
             <img src={{movie.poster}}>
             <h2>Rating: {{movie.rating}}</h2>
             <button type="button" class="btn btn-dark">{{movie.genre_name_1}}</button>
             <button type="button" class="btn btn-dark">{{movie.genre_name_2}}</button>
             <button type="button" class="btn btn-dark">{{movie.genre_name_3}}</button>
-            {% endif %}
         </div>
         <div class="col-6" id="description">
-
-            {% comment %} <form class="d-flex" role="search" action="" method="POST"> Currently not working, needs to redirect?
-                {% csrf_token %}
-                <input class="form-control me-2" type="search" placeholder="Enter movie name" aria-label="Search" name="movie" required>
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form> {% endcomment %}
             <div class="container" id="overview">
                 <h1>{{movie.title}}</h1>
 
@@ -49,5 +40,16 @@
         <div class="col">
         </div>
     </div>
+</div>
+
+<div class="poster-container text-center">
+    <h1> Similar Movies </h1><br>
+    {% for similar_movie in similar_movies %}
+    <form action="{% url 'movie-detail' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="movie_id" value={{similar_movie.id}}>
+        <input class="img-size" type="image" src={{similar_movie.poster}} width="250" height="400">
+    </form>
+    {% endfor %}
 </div>
 {% endblock %}

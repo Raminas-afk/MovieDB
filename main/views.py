@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from userprofiles.models import SeenMovie, SavedMovie
 from utils.reusable_functions import is_movie_saved, is_movie_seen
-from utils.reusable_variables import key, poster_url, trailer_url
+from utils.reusable_variables import key, poster_url, trailer_url, upcoming_url, similar_url
 import requests
 
 # Reusable variables
@@ -14,15 +14,36 @@ import requests
 
 def homepage(request):
     if request.method == "GET":
-        return render(request, "main/homepage.html")
-    
+        query = requests.get(upcoming_url.format(key)).json()
+        results = query['results']
+        top3_results = []
+        result_nr = 0
+        for item in results:
+            if result_nr < 3:
+                try:
+                    info = {
+                        "id": results[result_nr]['id'],
+                        "poster": poster_url + results[result_nr]['poster_path'],
+                        "title": results[result_nr]['title'],
+                        "rating": results[result_nr]['vote_average'],
+                    }
+                    top3_results.append(info)
+                    result_nr += 1
+                except:
+                    pass
+        return render(request, 'main/homepage.html', {
+            'top3_results': top3_results
+        })
+
+def search(request):
+    if request.method == "GET":
+        return redirect('homepage')
 
     if request.method == "POST":
         movie_name = request.POST['movie']
         url = "https://api.themoviedb.org/3/search/movie?api_key={}&query={}"
         query = requests.get(url.format(key, movie_name)).json()
         results = query['results']
-
         search_results = []
         result_nr = 0
         for item in results:
@@ -38,7 +59,7 @@ def homepage(request):
                 result_nr += 1
             except:
                 pass
-        return render(request, "main/homepage.html", {
+        return render(request, "main/search.html", {
             "search_results": search_results,
         })
 
@@ -49,8 +70,9 @@ def movie_detail(request):
         movie_id = request.POST['movie_id']
         url = "https://api.themoviedb.org/3/movie/{}?api_key={}"
         query = requests.get(url.format(movie_id, key)).json()
+        similar_query = requests.get(similar_url.format(movie_id, key)).json()
         trailer_query = requests.get(trailer_url.format(movie_id, key)).json()
-        info = {
+        movie_detail = {
             "id": query['id'],
             "poster": poster_url + query['poster_path'],
             "trailer_key": trailer_query['results'][0]['key'],
@@ -61,14 +83,30 @@ def movie_detail(request):
         genres_list = query['genres']
         genre_nr = 1
         for item in genres_list:
-            info[f"genre_name_{genre_nr}"] = item['name']
+            movie_detail[f"genre_name_{genre_nr}"] = item['name']
             genre_nr += 1
 
-        print(info)   # for easier debugging
+        print(movie_detail)   # for easier debugging
 
+        similar_movies = similar_query['results']
+        similar_results = []
+        similar_nr = 0
+        for movie in similar_movies:
+            if similar_nr < 3:
+                try:
+                    info = {
+                        "id": similar_movies[similar_nr]['id'],
+                        "poster": poster_url + similar_movies[similar_nr]['poster_path'],
+                        "title": similar_movies[similar_nr]['title'],
+                        "rating": similar_movies[similar_nr]['vote_average'],
+                    }
+                    similar_results.append(info)
+                    similar_nr += 1
+                except:
+                    pass
         return render(request, "main/movie_detail.html", {
-            "movie": info,
-            "movie_id": movie_id,  # delete if not needed
+            "movie": movie_detail,
+            "similar_movies": similar_results,
             "exists_in_seen": is_movie_seen(movie_id, current_user),
             "exists_in_later": is_movie_saved(movie_id, current_user)
         })

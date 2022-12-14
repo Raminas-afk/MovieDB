@@ -9,10 +9,10 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/">Home</a>
           </li>
+          {% if user.is_authenticated %}
           <li class="nav-item">
             <a href="{% url 'profile' %}"class="nav-link active" aria-current="page" href="/">My Profile</a>
           </li>
-          {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a>
             </li>
@@ -25,10 +25,10 @@
             </li>
           {% endif %}
           <li class="nav-item">
-            <a href="{% url 'profile' %}"class="nav-link active" aria-current="page" href="/">Upcoming</a>
+            <a href=""class="nav-link active" aria-current="page" href="/">Upcoming</a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'profile' %}"class="nav-link active" aria-current="page" href="/">Popular</a>
+            <a href=""class="nav-link active" aria-current="page" href="/">Popular</a>
           </li>
         </ul>
         

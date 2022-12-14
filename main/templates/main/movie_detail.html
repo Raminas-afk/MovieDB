@@ -27,12 +27,12 @@
 
                 <form action="{% url 'add-or-remove' %}" method="POST">
                     {% csrf_token %}
-                    <input type='hidden' name="seen_movie" value={{movie_id}}>
+                    <input type='hidden' name="seen_movie" value={{movie.id}}>
                     <button value="submit" class="btn btn-outline-primary">{% if exists_in_seen %}Remove From Seen List{% else %}Already seen it{% endif %}</button>
                 </form><br>
                 <form action="{% url 'add-or-remove' %}" method="POST">
                     {% csrf_token %}
-                    <input type='hidden' name='saved_movie' value={{movie_id}}>
+                    <input type='hidden' name='saved_movie' value={{movie.id}}>
                     <button value="submit" class="btn btn-outline-success">{% if exists_in_later %}Remove From Watch Later List{% else %}Watch Later{% endif %}</button>
                 </form>
             </div>

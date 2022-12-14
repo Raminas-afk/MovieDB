@@ -10,7 +10,9 @@ import requests
 # Create your views here.
 
 def profile_overview(request):
-    return render(request, "userprofiles/profile_overview.html")
+    return render(request, "userprofiles/profile_overview.html", {
+        "user": request.user
+    })
 
 
 def profile_saved_movies(request):

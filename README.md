@@ -7,7 +7,7 @@ Currently:
 #Register/Login
 #Search movies
 #Movie overview(trailer, poster, genres, description...)
-#Save seen movies/ add to watch list
+#Save seen movies/ add to watch later list
 
 Working on:
 

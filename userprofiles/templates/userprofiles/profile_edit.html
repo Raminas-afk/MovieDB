@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title%}Edit Profile Info{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container text-center">
+    <div class="col-6 container py-5">
+        <h1>Profile Details</h1>
+        <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }}"><br>
+        <form method="POST">
+        {% csrf_token %}    
+        {{profile_form|crispy}}
+        <h1>Account Details</h1>
+        {{user_form|crispy}}
+        <button type="submit"  class="btn btn-primary btn-lg">Save</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

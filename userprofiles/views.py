@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import NewUserForm
+from .forms import NewUserForm, UpdateProfileForm, UpdateUserForm
 from utils.reusable_variables import key, poster_url
 
 import requests
@@ -14,6 +14,22 @@ def profile_overview(request):
         "user": request.user
     })
 
+def edit_profile(request):
+    if request.method == "GET":
+        profile_form = UpdateProfileForm(instance=request.user.profile)
+        user_form = UpdateUserForm(instance=request.user)
+        return render(request, "userprofiles/profile_edit.html", {
+            "profile_form": profile_form,
+            "user_form": user_form
+        })
+    if request.method == "POST":
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile')
 
 def profile_saved_movies(request):
     user = request.user

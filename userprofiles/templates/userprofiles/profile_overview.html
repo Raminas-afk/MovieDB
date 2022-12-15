@@ -4,16 +4,17 @@
 
 {% block content %}
 
-<div class="container text-center">
-    <div class="col-6 container py-5">
+    <div class="container py-5 text-center">
         <h1>{{user|capfirst}} Profile</h1>
         <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }}"><br>
         <h3>Bio:</h3>
         <p>{{user.profile.bio}}</p>
+        <h4>Seen Movies: {{seen_count}}<h4>
+        <h4>Saved Movies: {{saved_count}}</h4>
+        <h4>Total Watch Time: {{watch_time}}</h4>
         <a href="{% url 'seen-movies' %}"><button type="button"  class="btn btn-primary btn-lg">Seen movie list</button></a>
         <a href="{% url 'saved-movies' %}"><button type="button" class="btn btn-primary btn-lg">Watch later list</button></a><br><br>
         <a href="{% url 'edit-profile' %}"><button type="button"  class="btn btn-primary btn-lg">Edit Profile</button></a>
     </div>
-</div>
 
 {% endblock %}

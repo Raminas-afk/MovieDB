@@ -8,7 +8,7 @@ from userprofiles.models import SeenMovie, SavedMovie, Profile
 
 User = get_user_model()
 
-admin.site.register(User)
+# admin.site.register(User)
 admin.site.register(SeenMovie)
 admin.site.register(Profile)
 admin.site.register(SavedMovie)

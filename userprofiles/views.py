@@ -3,15 +3,29 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import NewUserForm, UpdateProfileForm, UpdateUserForm
 from utils.reusable_variables import key, poster_url
-
+from .models import SeenMovie, SavedMovie
+from datetime import timedelta
 import requests
 
 
 # Create your views here.
+def count_watch_time(total_watch_time):
+    hours = total_watch_time / 60
+    print(hours)
 
 def profile_overview(request):
+    seen_movies = SeenMovie.objects.filter(profiles=request.user.profile)
+    saved_movies = SavedMovie.objects.filter(profiles=request.user.profile)
+    get_total_minutes = seen_movies.values_list('length', flat=True)
+    watch_time_minutes = 0
+    for item in get_total_minutes:
+        watch_time_minutes += item
+    hours_minutes = timedelta(minutes=watch_time_minutes)
     return render(request, "userprofiles/profile_overview.html", {
-        "user": request.user
+        "user": request.user,
+        "seen_count": seen_movies.count(),
+        "saved_count": saved_movies.count(),
+        "watch_time": hours_minutes
     })
 
 def edit_profile(request):
@@ -30,10 +44,12 @@ def edit_profile(request):
             user_form.save()
             profile_form.save()
             return redirect('profile')
+        else:
+            return redirect('edit-profile')
 
 def profile_saved_movies(request):
     user = request.user
-    movies_id = user.saved_movies.all()
+    movies_id = user.profile.saved_movies.all()
     saved_movies_list = []
 
     for id in movies_id:
@@ -53,7 +69,7 @@ def profile_saved_movies(request):
 
 def profile_seen_movies(request):
     user = request.user
-    movies_id = user.seen_movies.all()
+    movies_id = user.profile.seen_movies.all()
     poster_url = "https://image.tmdb.org/t/p/original/"
     seen_movies_list = []
 

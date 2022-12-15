@@ -1,11 +1,8 @@
-#MovieDB
+# MovieDB (IMDB clone)
 
-IMDB clone
+## Currently:
 
-Currently: 
++ Authentication (Register, Login)
++ Profile (Avatar, Bio, Edit Email/Username, Total Watch Time, Seen Movie List, Watch Later List )
++ Movies (Search, Movie Details, Popular/Upcoming/Top Rated Lists)
 
-#Register/Login #Search movies #Movie overview(trailer, poster, genres, description...) #Save seen movies/ add to watch later list
-
-Working on:
-
-#Edit Profile(picture, bio) #Edit User(change password, email) #Additional User info(movie count, total watch time) #Upcoming/Currently popular movies #Recommendations

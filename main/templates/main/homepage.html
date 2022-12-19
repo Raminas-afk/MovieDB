@@ -14,8 +14,7 @@
     <h1>TOP 3 Upcoming Movies</h1><br>
     {% for movie in top3_results %}
         {% comment %} <h3>{{movie.title}}</h3> {% endcomment %}
-        <form action="{% url 'movie-detail' %}" method="POST">
-            {% csrf_token %}
+        <form action="{% url 'movie-detail' movie.id %}" method="GET">
             <input type="hidden" name="movie_id" value={{movie.id}}>
             <input class="img-size" type="image" src={{movie.poster}} width="250" height="400">
         </form>

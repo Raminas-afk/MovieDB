@@ -5,10 +5,8 @@
 <div class="poster-container text-center">
     {% if movies %}
     <h1>Movies you have seen so far</h1>
-
         {% for movie in movies %}
-            <form action="{% url 'movie-detail' %}" method="POST">
-                {% csrf_token %}
+            <form action="{% url 'movie-detail' movie.id %}" method="GET">
                 <input type="hidden" name="movie_id" value={{movie.id}}>
                 <input class="img-size" type="image" src={{movie.poster}} width="300" height="500">
             </form>

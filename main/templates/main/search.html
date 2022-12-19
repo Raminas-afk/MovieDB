@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col" id="poster">
             {% if movie %}
-            <form action="{% url 'movie-detail' %}" method="POST">
+            <form action="{% url 'movie-detail' movie.id %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="movie_id" value={{movie.id}}>
                 <input class="img-size" type="image" src={{movie.poster}} width="300" height="500">
@@ -33,8 +33,7 @@
             <div class="container" id="overview">
                 <h3>{{movie.title}}</h3>
                 {{movie.overview}}<br>
-                <form action="{% url 'movie-detail' %}" method="POST">
-                    {% csrf_token %}
+                <form action="{% url 'movie-detail' movie.id %}" method="GET">
                     <input type='hidden' name="movie_id" value={{movie.id}}>
                     <button value="submit" class="btn btn-outline-primary">Details</button>
                 </form><br>

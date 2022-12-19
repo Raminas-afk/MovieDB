@@ -9,10 +9,20 @@
     <div class="row">
         <div class="col" id="poster">
             <img src={{movie.poster}}>
-            <h2>Rating: {{movie.rating}}</h2>
+            <h2>Rating: {{movie.rating}}</h2> 
             <button type="button" class="btn btn-dark">{{movie.genre_name_1}}</button>
             <button type="button" class="btn btn-dark">{{movie.genre_name_2}}</button>
-            <button type="button" class="btn btn-dark">{{movie.genre_name_3}}</button>
+            {% if movie.genre_name_3 %}
+            <button type="button" class="btn btn-dark">{{movie.genre_name_3}}</button> 
+            {% endif %}
+            {% if movie.genre_name_4 %}
+            <button type="button" class="btn btn-dark">{{movie.genre_name_4}}</button>
+            {% endif %}
+            {% if movie.genre_name_5 %}
+            <button type="button" class="btn btn-dark">{{movie.genre_name_5}}</button>
+            {% endif %}
+
+
         </div>
         <div class="col-6" id="description">
             <div class="container" id="overview">
@@ -48,11 +58,32 @@
 <div class="poster-container text-center">
     <h1> Similar Movies </h1><br>
     {% for similar_movie in similar_movies %}
-    <form action="{% url 'movie-detail' %}" method="POST">
-        {% csrf_token %}
+    <form action="{% url 'movie-detail' similar_movie.id %}" method="GET">
+        {% comment %} {% csrf_token %} {% endcomment %}
         <input type="hidden" name="movie_id" value={{similar_movie.id}}>
         <input class="img-size" type="image" src={{similar_movie.poster}} width="250" height="400">
     </form>
     {% endfor %}
 </div>
+
+{% comment %} {% for comment in comments %}         # Fix comment section !
+        <div class="comments" style="padding: 10px;">
+          <p class="font-weight-bold">
+            {{ comment.profile }}
+            <span class=" text-muted font-weight-normal">
+              {{ comment.created_on }}
+            </span>
+          </p>
+          {{ comment.content | linebreaks }}
+        </div>
+        {% endfor %}
+<div class="card-body">
+        <h3>Leave a comment</h3>
+        <form action="{% url 'movie-detail' movie.id %} "method="POST">
+            {{ comment_form.as_p }}
+            {% csrf_token %}
+            <input type='hidden' name="movie_length" value={{movie.length}}>
+            <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
+        </form>
+        </div> {% endcomment %}
 {% endblock %}

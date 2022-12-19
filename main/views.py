@@ -1,13 +1,9 @@
 from django.shortcuts import render, redirect
-from userprofiles.models import SeenMovie, SavedMovie
+from userprofiles.models import SeenMovie, SavedMovie, Profile, Comment
+from .forms import CommentForm
 from utils.reusable_functions import is_movie_saved, is_movie_seen
 from utils.reusable_variables import key, poster_url, trailer_url, upcoming_url, similar_url, top_rated_url, popular_url
 import requests
-
-# Reusable variables
-
-
-# A few functions
 
 
 # Create your views here.
@@ -94,10 +90,10 @@ def movies_section(request, section):
         })
 
 
-def movie_detail(request):
-    current_profile = request.user.profile
-    if request.method == "POST":
-        movie_id = request.POST['movie_id']
+def movie_detail(request, movie_id):
+    current_profile = Profile.objects.get(user=request.user)
+
+    if request.method == "GET":
         url = "https://api.themoviedb.org/3/movie/{}?api_key={}"
         query = requests.get(url.format(movie_id, key)).json()
         similar_query = requests.get(similar_url.format(movie_id, key)).json()
@@ -109,7 +105,7 @@ def movie_detail(request):
             "title": query['title'],
             "rating": query['vote_average'],
             "length": query['runtime'],
-            "overview": query['overview'],    #Additional parameter genre_name[integer], some logic below
+            "overview": query['overview'],    #Additional parameter  genre_name[integer] added from below
         }
         genres_list = query['genres']
         genre_nr = 1
@@ -122,7 +118,7 @@ def movie_detail(request):
         similar_movies = similar_query['results']
         similar_results = []
         similar_nr = 0
-        for movie in similar_movies:
+        for movie in similar_movies: # try in range()
             if similar_nr < 3:
                 try:
                     info = {
@@ -135,12 +131,38 @@ def movie_detail(request):
                     similar_nr += 1
                 except:
                     pass
-        return render(request, "main/movie_detail.html", {
-            "movie": movie_detail,
-            "similar_movies": similar_results,
-            "exists_in_seen": is_movie_seen(movie_id, current_profile),
-            "exists_in_later": is_movie_saved(movie_id, current_profile)
-        })
+        # try:
+        #     movie = SeenMovie.objects.get(movie_id=movie_id)          # Fix Comment section
+        #     comments = movie.comments.filter(active=True)
+        # except:
+        #     pass
+
+        # comments = movie.comments.filter(active=True)
+        # comments = Comment.objects.filter(movie=movie_id)
+        # new_comment = None
+        # comment_form = CommentForm()
+        
+    # if request.method == "POST":      
+    #     comment_form = CommentForm(data=request.POST)
+    #     if comment_form.is_valid():
+    #         movie_length = request.POST['movie_length']
+    #         movie = SeenMovie.objects.get_or_create(movie_id=movie_id, length=movie_length)
+    #         new_comment = comment_form.save(commit=False)
+    #         new_comment.movie = movie
+    #         new_comment.profile = current_profile
+    #         new_comment.save()
+        
+            # return redirect('movie-detail', movie_id=movie_id)
+            
+    return render(request, "main/movie_detail.html", {
+        "movie": movie_detail,
+        "similar_movies": similar_results,
+        "exists_in_seen": is_movie_seen(movie_id, current_profile),
+        "exists_in_later": is_movie_saved(movie_id, current_profile),
+        # "comments": comments,
+        # "new_comment": new_comment,   # Comment section
+        # "comment_form": comment_form
+    })
 
 def add_or_remove(request):
     if request.method == "POST":
@@ -170,4 +192,4 @@ def add_or_remove(request):
             new_movie.profiles.add(request.user.profile)
             new_movie.save()
             
-        return redirect('homepage')
+        return redirect('movie-detail', movie_id = movie_id)

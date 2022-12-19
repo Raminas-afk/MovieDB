@@ -14,6 +14,6 @@
 + Friends list / Followed profiles
 
 
-# ![Screenshots](https://imgur.com/a/1aoDe3o)
+# <a href="https://imgur.com/a/1aoDe3o">Screenshots</a>
 
 
